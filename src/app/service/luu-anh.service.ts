@@ -20,10 +20,6 @@ export class LuuAnhService {
     return this.http.post<any>(this.baseUrl, formData);
   }
 
-  getFileName(maLuuAnh: number): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/${maLuuAnh}/ten`);
-  }
-
   downloadFile(maTaiLieu: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/${maTaiLieu}/download`, { responseType: 'blob', observe: 'response' });
 }

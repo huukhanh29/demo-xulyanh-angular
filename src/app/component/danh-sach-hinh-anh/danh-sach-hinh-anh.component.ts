@@ -39,32 +39,25 @@ export class DanhSachHinhAnhComponent implements OnInit {
     });
   }
 
-  taiFile(ma: any) {
-    this.luuAnhService.getFileName(ma).subscribe({
-      next: (data) => {
-        this.luuAnhService.downloadFile(ma).subscribe({
-          next: (response) => {
-            const blob = new Blob([response.body as Blob], {
-              type: 'application/octet-stream',
-            });
-
-            const a = document.createElement('a');
-            const objectUrl = URL.createObjectURL(blob);
-            a.href = objectUrl;
-            //lấy tên file
-            a.download = data.message;
-            a.style.display = 'none';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          },
-          error: (err) => {
-            alert('Tải thất bại');
-          },
+  taiFile(item: any) {
+    this.luuAnhService.downloadFile(item.id).subscribe({
+      next: (response) => {
+        const blob = new Blob([response.body as Blob], {
+          type: 'application/octet-stream',
         });
+
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        //lấy tên file
+        a.download = item.url;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       },
       error: (err) => {
-        console.log(err);
+        alert('Tải thất bại');
       },
     });
   }

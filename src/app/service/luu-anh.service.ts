@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -20,8 +20,8 @@ export class LuuAnhService {
     return this.http.post<any>(this.baseUrl, formData);
   }
 
-  getOriginalFileName(maLuuAnh: number): Observable<string> {
-    return this.http.get<string>(`${this.baseUrl}/${maLuuAnh}/ten`);
+  getFileName(maLuuAnh: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${maLuuAnh}/ten`);
   }
 
   downloadFile(maTaiLieu: number): Observable<any> {

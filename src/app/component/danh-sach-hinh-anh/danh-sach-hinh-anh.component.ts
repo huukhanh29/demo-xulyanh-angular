@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { LuuAnhService } from 'src/app/service/luu-anh.service';
 import { ThemLuuAnhComponent } from '../them-luu-anh/them-luu-anh.component';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-danh-sach-hinh-anh',
@@ -22,7 +21,7 @@ export class DanhSachHinhAnhComponent implements OnInit {
   loadLuuAnhList(): void {
     this.luuAnhService.getLuuAnhList().subscribe({
       next: (data) => {
-        console.log(data)
+        console.log(data);
         this.luuAnhList = data;
       },
       error: (err) => {
@@ -36,38 +35,36 @@ export class DanhSachHinhAnhComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      this.loadLuuAnhList()
+      this.loadLuuAnhList();
     });
   }
 
   taiFile(ma: any) {
-    this.luuAnhService.downloadFile(ma).subscribe({
-      next: (response) => {
-        const blob = new Blob([response.body as Blob], {
-          type: 'application/octet-stream',
+    this.luuAnhService.getFileName(ma).subscribe({
+      next: (data) => {
+        this.luuAnhService.downloadFile(ma).subscribe({
+          next: (response) => {
+            const blob = new Blob([response.body as Blob], {
+              type: 'application/octet-stream',
+            });
+
+            const a = document.createElement('a');
+            const objectUrl = URL.createObjectURL(blob);
+            a.href = objectUrl;
+            //lấy tên file
+            a.download = data.message;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          },
+          error: (err) => {
+            alert('Tải thất bại');
+          },
         });
-        // Extract filename from the Content-Disposition header
-        const contentDisposition = response.headers.get('content-disposition');
-        let filename = 'default-filename.ext'; // default filename if not provided
-        if (contentDisposition) {
-          const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(
-            contentDisposition
-          );
-          if (matches != null && matches[1]) {
-            filename = matches[1].replace(/['"]/g, '');
-          }
-        }
-        const a = document.createElement('a');
-        const objectUrl = URL.createObjectURL(blob);
-        a.href = objectUrl;
-        a.download = filename;
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
       },
       error: (err) => {
-        alert('Tải thất bại')
+        console.log(err);
       },
     });
   }
